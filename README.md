@@ -70,10 +70,14 @@ Work in progress. Verified so far:
   endpoints confirmed
 - `npm install -g signalk-server` works on Termux; skipped native modules
   are irrelevant for a TCP-connected coordinator
-- Boot autostart (Termux:Boot + wake-lock) scripted and tested
+- Mosquitto 2.1.2 and zigbee2mqtt 2.14.2 installed and verified on the
+  same phone (z2m starts and speaks TCP to a coordinator — the
+  EHOSTUNREACH against a placeholder IP is expected)
+- Boot autostart (Termux:Boot + wake-lock) scripted; MIUI autostart proved
+  unreliable — documented Termux:Widget one-tap fallback
 
-Next: MQTT broker + zigbee2mqtt feasibility, ZigBee coordinator, ESP32
-firmware (SensESP + NimBLE Calypso driver), alarm rules.
+Next: ZigBee coordinator (hardware), ESP32 firmware (SensESP + NimBLE
+Calypso driver), MQTT→Signal K mapping plugin, alarm rules.
 
 ## Why
 
@@ -84,6 +88,14 @@ computer for this job — it just needs the right software stack and a
 microcontroller sidekick. This repo documents the whole build, pitfalls
 included (MIUI is not server-friendly: expect to fight battery
 optimizers).
+
+## Documentation
+
+- [SETUP.md](SETUP.md) — step-by-step installation guide for humans
+  ([Italiano](SETUP.it.md))
+- [AGENT.md](AGENT.md) — instructions for an AI agent doing the setup:
+  what to automate, what to delegate to the human, known pitfalls
+  ([Italiano](AGENT.it.md))
 
 ## License
 
