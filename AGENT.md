@@ -38,10 +38,11 @@ the pitfalls that cost us hours. The human-facing guide is `SETUP.md`.
    them.
 6. **MIUI kills background/autostart aggressively.** Termux:Boot reads
    scripts from `~/.termux/boot/` (NOT `~/boot/`) — a wrong path looks
-   exactly like an MIUI block. Verify the path before blaming MIUI. If it
-   still fails with the right path, offer the fallback: Termux:Widget +
-   `~/bin/` script (idempotent starter). Do not spend more than a couple
-   of attempts on MIUI autostart.
+   exactly like an MIUI block. Verify the path before blaming MIUI. The
+   boot context has a minimal PATH: use absolute paths in the script.
+   If it still fails, offer the fallback: Termux:Widget + `~/bin/`
+   script (idempotent starter). Do not spend more than a couple of
+   attempts on MIUI autostart.
 7. **Verify, don't assume.** After each install: run the binary, hit the
    endpoint (`curl http://<ip>:3000/signalk/`), pub/sub a test MQTT
    message. A successful `npm install` is not a working service.

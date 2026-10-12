@@ -136,11 +136,20 @@ Create `~/.termux/boot/01-start.sh` (Termux:Boot executes executables in
 
 ```bash
 #!/data/data/com.termux/files/usr/bin/bash
-termux-wake-lock
-pgrep -x sshd >/dev/null || sshd
-pgrep -x mosquitto >/dev/null || mosquitto -d -p 1883
-pgrep -f "signalk-serv[e]r" >/dev/null || nohup signalk-server > "$HOME/signalk.log" 2>&1 &
+# Boot autostart: wake lock + sshd + mosquitto + Signal K (guarded, absolute paths)
+export PATH=/data/data/com.termux/files/usr/bin:$PATH
+cd "$HOME"
+/data/data/com.termux/files/usr/bin/termux-wake-lock
+pgrep -x sshd >/dev/null || /data/data/com.termux/files/usr/bin/sshd
+pgrep -x mosquitto >/dev/null || /data/data/com.termux/files/usr/bin/mosquitto -d -p 1883
+pgrep -f "node.*signalk-server" >/dev/null || nohup /data/data/com.termux/files/usr/bin/signalk-server > "$HOME/signalk.log" 2>&1 &
 ```
+
+The boot context has a minimal environment: use **absolute paths** (or
+export PATH) — bare `signalk-server` fails with "No such file or
+directory" at boot even though it works in an interactive Termux shell.
+The `node.*signalk-server` pgrep pattern also avoids matching the script's
+own wrapper process.
 
 ```bash
 chmod +x ~/.termux/boot/01-start.sh
