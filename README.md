@@ -10,8 +10,19 @@ My sailboat is from 1985. Her electronics are minimal, and almost every
 open-source boat-monitoring project assumes a Raspberry Pi. This project
 reuses what I had lying around: a **Xiaomi Mi 9T** (6 GB RAM, built-in
 battery, GPS, sensors, cameras, optional cellular modem) as the boat's
-server brain, plus a **Sailor Hat with ESP32** (SH-ESP32) as the sensor
-gateway.
+server brain, plus an **ESP32** board as the sensor gateway.
+
+> **Note:** the hardware choices below (Mi 9T, Sailor Hat with ESP32,
+> Calypso Ultrasonic wind sensor, ThirdReality leak sensors) are *this
+> project's specific use case* — what I happened to own or need. The
+> architecture is generic: any Android phone with Termux can be the
+> server, and any ESP32-based board can be the sensor gateway. The
+> SH-ESP32 is just a convenient marine-grade ESP32 (12-24V power input,
+> protected I/O, external antenna connector); a plain ESP32 devkit with
+> a DC-DC converter works exactly the same. Likewise the wind sensor is
+> whatever you have: the Calypso Ultrasonic is simply the one I own, and
+> it happens to have a documented BLE protocol with existing open-source
+> drivers.
 
 ## The idea
 
@@ -33,15 +44,16 @@ The phone gives things a Raspberry Pi cannot:
 - **optional data SIM** — remote monitoring without marina WiFi
 - **a screen and a touch interface** you already have
 
-The **SH-ESP32** handles what Android is bad at: reading the
-**Calypso Ultrasonic** wireless wind sensor over BLE and publishing the
-data to Signal K (via SensESP), reliably and independently of the phone.
+The **ESP32 gateway** handles what Android is bad at: reading the wind
+sensor over BLE — in my case a **Calypso Ultrasonic** wireless anemometer
+— and publishing the data to Signal K (via SensESP), reliably and
+independently of the phone.
 
 ## What is monitored
 
 | Subsystem | Sensor | Path |
 |---|---|---|
-| Wind (speed, angle, heading, roll/pitch) | Calypso Ultrasonic (BLE, masthead) | SH-ESP32 → Signal K TCP |
+| Wind (speed, angle, heading, roll/pitch) | Calypso Ultrasonic (BLE, masthead) | ESP32 gateway → Signal K TCP |
 | Fridges x3 + engine room temperature | ZigBee temperature sensors | coordinator → zigbee2mqtt → MQTT → Signal K |
 | Bilges / watertight compartments x4 | ThirdReality ZigBee water leak sensors (with local 120 dB buzzer) | same path |
 | Position / anchor watch | phone GPS | Signal K |
@@ -60,7 +72,7 @@ Work in progress. Verified so far:
   are irrelevant for a TCP-connected coordinator
 - Boot autostart (Termux:Boot + wake-lock) scripted and tested
 
-Next: MQTT broker + zigbee2mqtt feasibility, ZigBee coordinator, SH-ESP32
+Next: MQTT broker + zigbee2mqtt feasibility, ZigBee coordinator, ESP32
 firmware (SensESP + NimBLE Calypso driver), alarm rules.
 
 ## Why

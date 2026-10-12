@@ -10,8 +10,21 @@ La mia barca a vela è del 1985, con un'elettronica minimale, e quasi tutti
 i progetti open source di monitoraggio nautico danno per scontato un
 Raspberry Pi. Questo progetto riutilizza quello che avevo: un **Xiaomi
 Mi 9T** (6 GB di RAM, batteria integrata, GPS, sensori, fotocamere, modem
-cellulare opzionale) come "cervello" di bordo, più un **Sailor Hat with
-ESP32** (SH-ESP32) come gateway dei sensori.
+cellulare opzionale) come "cervello" di bordo, più una scheda **ESP32**
+come gateway dei sensori.
+
+> **Nota:** le scelte hardware qui sotto (Mi 9T, Sailor Hat with ESP32,
+> sensore vento Calypso Ultrasonic, sensori di allagamento ThirdReality)
+> sono *il caso d'uso specifico di questo progetto* — ciò che avevo o mi
+> serviva. L'architettura è generica: qualunque telefono Android con
+> Termux può fare da server, e qualunque scheda basata su ESP32 può fare
+> da gateway sensori. Lo SH-ESP32 è semplicemente un ESP32 in versione
+> marina (ingresso 12-24V, I/O protetti, connettore antenna esterna); una
+> comune devkit ESP32 con un convertitore DC-DC funziona esattamente
+> allo stesso modo. Allo stesso modo il sensore vento è quello che hai:
+> il Calypso Ultrasonic è semplicemente quello che possiedo io, che ha il
+> vantaggio di un protocollo BLE documentato con driver open source già
+> esistenti.
 
 ## L'idea
 
@@ -33,15 +46,16 @@ Il telefono offre cose che un Raspberry Pi non ha:
 - **SIM dati opzionale** — monitoraggio fuori dalla rete del porto
 - **uno schermo touch** che possiedi già
 
-Lo **SH-ESP32** fa ciò in cui Android è scarso: leggere il sensore vento
-**Calypso Ultrasonic** via BLE e pubblicare i dati su Signal K (con
-SensESP), in modo affidabile e indipendente dal telefono.
+Il **gateway ESP32** fa ciò in cui Android è scarso: leggere il sensore
+vento via BLE — nel mio caso un **Calypso Ultrasonic** — e pubblicare i
+dati su Signal K (con SensESP), in modo affidabile e indipendente dal
+telefono.
 
 ## Cosa viene monitorato
 
 | Sottosistema | Sensore | Percorso |
 |---|---|---|
-| Vento (velocità, angolo, rotta, rollio/beccuccio) | Calypso Ultrasonic (BLE, in testa d'albero) | SH-ESP32 → Signal K TCP |
+| Vento (velocità, angolo, rotta, rollio/beccuccio) | Calypso Ultrasonic (BLE, in testa d'albero) | gateway ESP32 → Signal K TCP |
 | Frigoriferi x3 + temperatura locale motore | sensori di temperatura ZigBee | coordinatore → zigbee2mqtt → MQTT → Signal K |
 | Sentine / locali stagni x4 | sensori di allagamento ZigBee ThirdReality (con buzzer locale da 120 dB) | stesso percorso |
 | Posizione / watch àncora | GPS del telefono | Signal K |
@@ -62,7 +76,7 @@ Lavoro in corso. Verificato fin qui:
 - autostart allo boot (Termux:Boot + wake-lock) scriptato e testato
 
 Prossimi passi: broker MQTT + fattibilità zigbee2mqtt, coordinatore
-ZigBee, firmware SH-ESP32 (SensESP + driver NimBLE per Calypso), regole
+ZigBee, firmware ESP32 (SensESP + driver NimBLE per Calypso), regole
 di allarme.
 
 ## Perché
