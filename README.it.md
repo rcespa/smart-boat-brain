@@ -11,7 +11,7 @@ La mia barca a vela è un **Comet 1050**, costruito da **Comar SpA** nel
 basata su **NMEA 0183**, e quasi tutti i progetti open source di
 monitoraggio nautico danno per scontato un Raspberry Pi. Questo progetto
 riutilizza quello che avevo: un **Xiaomi Mi 9T** (6 GB di RAM, batteria
-integrata, GPS, sensori, fotocamere, modem cellulare opzionale) come
+integrata, GPS, sensori, fotocamere, modem cellulare 4G LTE) come
 "cervello" di bordo, più una scheda **ESP32** come gateway dei sensori.
 
 > **Nota:** le scelte hardware qui sotto (Mi 9T, Sailor Hat with ESP32,
@@ -66,7 +66,8 @@ Il telefono offre cose che un Raspberry Pi non ha:
   scolleghi la batteria servizi della barca
 - **GPS + bussola + fotocamere integrati** — posizione, watch dell'ancora,
   controllo visivo della barca da remoto
-- **SIM dati opzionale** — monitoraggio fuori dalla rete del porto
+- **SIM dati 4G LTE** — monitoraggio fuori dalla rete del porto e hotspot
+  WiFi di bordo per il tablet usato come plotter cartografico
 - **uno schermo touch** che possiedi già
 
 Il **gateway ESP32** fa ciò in cui Android è scarso: leggere il sensore

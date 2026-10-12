@@ -10,7 +10,7 @@ My sailboat is a **Comet 1050**, built by **Comar SpA** in **1985** (10.3 m
 LOA). Her electronics are minimal and almost entirely **NMEA 0183** based,
 and almost every open-source boat-monitoring project assumes a Raspberry
 Pi. This project reuses what I had lying around: a **Xiaomi Mi 9T** (6 GB
-RAM, built-in battery, GPS, sensors, cameras, optional cellular modem) as
+RAM, built-in battery, GPS, sensors, cameras, 4G LTE cellular modem) as
 the boat's server brain, plus an **ESP32** board as the sensor gateway.
 
 > **Note:** the hardware choices below (Mi 9T, Sailor Hat with ESP32,
@@ -64,7 +64,8 @@ The phone gives things a Raspberry Pi cannot:
   service battery is disconnected
 - **built-in GPS + compass + cameras** — position, anchor watch, visual
   inspection of the boat from anywhere
-- **optional data SIM** — remote monitoring without marina WiFi
+- **4G LTE data SIM** — remote monitoring without marina WiFi, plus an
+  onboard WiFi hotspot for the tablet used as chartplotter
 - **a screen and a touch interface** you already have
 
 The **ESP32 gateway** handles what Android is bad at: reading the wind
