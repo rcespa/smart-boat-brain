@@ -108,10 +108,13 @@ Lavoro in corso. Verificato fin qui:
   si è rivelato inaffidabile — documentato il fallback a un tocco con
   Termux:Widget
 
-Prossimi passi: coordinatore ZigBee (hardware), firmware ESP32 (SensESP +
-driver NimBLE per Calypso), input NMEA4WIFI → Signal K, ponte Bluetooth
-per i dispositivi Victron e il BMS, plugin di mappatura MQTT→Signal K,
-regole di allarme.
+Prossimi passi: coordinatore — **Sonoff ZB Bridge-P** flashato con
+Tasmota32 (build Sonoff-ZigbeeBridgePro, senza saldature) + firmware
+coordinator EmberZNet NCP sul CC2652, che espone un bridge TCP sull'
+hotspot del telefono (`port: tcp://<ip-bridge>:8888`, `adapter: ember`);
+firmware ESP32 (SensESP + driver NimBLE per Calypso), input NMEA4WIFI →
+Signal K, ponte Bluetooth per i dispositivi Victron e il BMS, plugin di
+mappatura MQTT→Signal K, regole di allarme.
 
 ## Perché
 

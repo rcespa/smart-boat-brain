@@ -106,9 +106,13 @@ Work in progress. Verified so far:
 - Boot autostart (Termux:Boot + wake-lock) scripted; MIUI autostart proved
   unreliable — documented Termux:Widget one-tap fallback
 
-Next: ZigBee coordinator (hardware), ESP32 firmware (SensESP + NimBLE
-Calypso driver), NMEA4WIFI → Signal K input, Bluetooth bridge for the
-Victron devices and the BMS, MQTT→Signal K mapping plugin, alarm rules.
+Next: coordinator — **Sonoff ZB Bridge-P** flashed with Tasmota32
+(Sonoff-ZigbeeBridgePro build, no soldering) + EmberZNet NCP coordinator
+firmware on its CC2652, exposing a TCP bridge on the phone's hotspot
+(`port: tcp://<bridge-ip>:8888`, `adapter: ember`); ESP32 firmware
+(SensESP + NimBLE Calypso driver), NMEA4WIFI → Signal K input, Bluetooth
+bridge for the Victron devices and the BMS, MQTT→Signal K mapping plugin,
+alarm rules.
 
 ## Documentation
 
