@@ -1,6 +1,5 @@
 # AGENT.md — instructions for AI agents
 
-English | [Italiano](AGENT.it.md)
 
 You are an AI agent helping set up the smart-boat-brain stack (Termux +
 Signal K + Mosquitto + zigbee2mqtt on an Android phone). This file tells
