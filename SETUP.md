@@ -131,24 +131,24 @@ and proves the install works.
 
 ## Phase 4 — Keep it running
 
-Create `~/boot/01-start.sh` (Termux:Boot executes numbered executables in
-`~/boot/`):
+Create `~/.termux/boot/01-start.sh` (Termux:Boot executes executables in
+`~/.termux/boot/` — NOT `~/boot/`):
 
 ```bash
 #!/data/data/com.termux/files/usr/bin/bash
 termux-wake-lock
-sshd
-if ! pgrep -f "signalk-serv[e]r" >/dev/null; then
-  nohup signalk-server > "$HOME/signalk.log" 2>&1 &
-fi
+pgrep -x sshd >/dev/null || sshd
+pgrep -x mosquitto >/dev/null || mosquitto -d -p 1883
+pgrep -f "signalk-serv[e]r" >/dev/null || nohup signalk-server > "$HOME/signalk.log" 2>&1 &
 ```
 
 ```bash
-chmod +x ~/boot/01-start.sh
+chmod +x ~/.termux/boot/01-start.sh
 ```
 
-**Reality check:** on MIUI, Termux:Boot autostart failed twice in our tests
-even with every permission granted. The fallback that always works:
+**Reality check:** our first two autostart "failures" were actually this
+wrong path (`~/boot/` instead of `~/.termux/boot/`). With the correct
+path, if MIUI still blocks autostart, the fallback that always works:
 install **Termux:Widget**, put an executable script in `~/bin` (e.g.
 `~/bin/AVVIA-SERVIZI` that calls the boot script), then add the
 Termux:Widget widget to the home screen. One tap starts everything.

@@ -36,10 +36,12 @@ the pitfalls that cost us hours. The human-facing guide is `SETUP.md`.
    canboatjs): native USB/CAN modules can't build on Android and we don't
    need them — the ZigBee coordinator is always TCP. Do not try to "fix"
    them.
-6. **MIUI kills background/autostart aggressively.** Termux:Boot failed to
-   autostart twice even with all documented permissions. Always offer the
-   fallback: Termux:Widget + `~/bin/` script (idempotent starter). Do not
-   spend more than a couple of attempts on MIUI autostart.
+6. **MIUI kills background/autostart aggressively.** Termux:Boot reads
+   scripts from `~/.termux/boot/` (NOT `~/boot/`) — a wrong path looks
+   exactly like an MIUI block. Verify the path before blaming MIUI. If it
+   still fails with the right path, offer the fallback: Termux:Widget +
+   `~/bin/` script (idempotent starter). Do not spend more than a couple
+   of attempts on MIUI autostart.
 7. **Verify, don't assume.** After each install: run the binary, hit the
    endpoint (`curl http://<ip>:3000/signalk/`), pub/sub a test MQTT
    message. A successful `npm install` is not a working service.
@@ -68,7 +70,7 @@ npm install -g signalk-server          # ~1 min, warnings OK
 nohup signalk-server > ~/signalk.log 2>&1 &   # then curl the endpoints
 mosquitto -d -p 1883 && mosquitto_pub/sub round-trip
 npm install -g zigbee2mqtt             # config in ~/z2m, ZIGBEE2MQTT_DATA=~/z2m
-# write ~/boot/01-start.sh (wake-lock, sshd, guarded signalk start) + ~/bin/AVVIA-SERVIZI
+# write ~/.termux/boot/01-start.sh (wake-lock, guarded sshd/mosquitto/signalk) + ~/bin/AVVIA-SERVIZI
 ```
 
 ## Session etiquette

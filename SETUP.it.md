@@ -131,28 +131,28 @@ dimostra che l'installazione funziona.
 
 ## Fase 4 — Tenere in vita il tutto
 
-Crea `~/boot/01-start.sh` (Termux:Boot esegue gli eseguibili numerati in
-`~/boot/`):
+Crea `~/.termux/boot/01-start.sh` (Termux:Boot esegue gli eseguibili in
+`~/.termux/boot/` — NON `~/boot/`):
 
 ```bash
 #!/data/data/com.termux/files/usr/bin/bash
 termux-wake-lock
-sshd
-if ! pgrep -f "signalk-serv[e]r" >/dev/null; then
-  nohup signalk-server > "$HOME/signalk.log" 2>&1 &
-fi
+pgrep -x sshd >/dev/null || sshd
+pgrep -x mosquitto >/dev/null || mosquitto -d -p 1883
+pgrep -f "signalk-serv[e]r" >/dev/null || nohup signalk-server > "$HOME/signalk.log" 2>&1 &
 ```
 
 ```bash
-chmod +x ~/boot/01-start.sh
+chmod +x ~/.termux/boot/01-start.sh
 ```
 
-**Verità scomoda:** su MIUI l'avvio automatico di Termux:Boot ha fallito
-due volte nei nostri test, anche con tutti i permessi concessi. Il piano B
-che funziona sempre: installa **Termux:Widget**, metti uno script
-eseguibile in `~/bin` (es. `~/bin/AVVIA-SERVIZI` che richiama lo script di
-boot) e aggiungi il widget Termux:Widget alla schermata home. Un tocco e
-parte tutto.
+**Verità scomoda:** i nostri primi due "fallimenti" dell'avvio automatico
+erano in realtà questo percorso sbagliato (`~/boot/` invece di
+`~/.termux/boot/`). Con il percorso corretto, se MIUI bloccasse ancora
+l'avvio, il piano B che funziona sempre: installa **Termux:Widget**, metti
+uno script eseguibile in `~/bin` (es. `~/bin/AVVIA-SERVIZI` che richiama
+lo script di boot) e aggiungi il widget Termux:Widget alla schermata home.
+Un tocco e parte tutto.
 
 Tieni il telefono alimentato con limite di carica intorno all'80% (salute
 della batteria).
