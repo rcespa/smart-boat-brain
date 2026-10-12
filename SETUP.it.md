@@ -155,6 +155,26 @@ la shell wrapper dello script stesso.
 chmod +x ~/.termux/boot/01-start.sh
 ```
 
+**Watchdog (la vera soluzione a MIUI):** Termux:Boot parte solo dopo che
+lo schermo è stato sbloccato almeno una volta — inutile dopo un riavvio
+silenzioso. Registrare invece un job JobScheduler di Android, che
+sopravvive ai riavvii e non richiede interazione:
+
+```bash
+termux-job-scheduler -s ~/.termux/boot/01-start.sh --job-id 1 --period-ms 900000 --persisted true
+termux-job-scheduler -p    # verifica che il job sia in attesa
+```
+
+Ogni 15 minuti (il minimo di Android) lo script idempotente ricontrolla
+tutti i servizi. Insieme allo script Termux:Boot (avvio rapido quando lo
+schermo viene sbloccato) e all'icona Termux:Widget (avvio manuale), il
+sistema si autorigenera dopo qualunque riavvio, silenzioso o no.
+
+Nota: `pgrep -x sshd` / `pgrep -x mosquitto` non sono affidabili su
+Android (i processi risultano con percorso completo); usare pattern tipo
+`pgrep -f "/usr/bin/ss[h]d"` (la parentesi evita di matchare il chiamante
+stesso) e un pidfile per i server Node avviati con nohup.
+
 **Verità scomoda:** i nostri primi due "fallimenti" dell'avvio automatico
 erano in realtà questo percorso sbagliato (`~/boot/` invece di
 `~/.termux/boot/`). Con il percorso corretto, se MIUI bloccasse ancora

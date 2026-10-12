@@ -155,6 +155,26 @@ own wrapper process.
 chmod +x ~/.termux/boot/01-start.sh
 ```
 
+**Watchdog (the real fix for MIUI):** Termux:Boot only runs after the
+screen is unlocked at least once — useless for a silent reboot. Register
+an Android JobScheduler job instead, which survives reboots and needs no
+user interaction:
+
+```bash
+termux-job-scheduler -s ~/.termux/boot/01-start.sh --job-id 1 --period-ms 900000 --persisted true
+termux-job-scheduler -p    # verify the job is pending
+```
+
+Every 15 minutes (Android's minimum) the idempotent script re-checks all
+services. Combined with the Termux:Boot script (fast start when the
+screen is unlocked) and the Termux:Widget icon (manual start), the system
+self-heals after any reboot, silent or not.
+
+Note: `pgrep -x sshd` / `pgrep -x mosquitto` are unreliable on Android
+(processes show with full paths); use `pgrep -f "/usr/bin/ss[h]d"` style
+patterns (bracket avoids matching the caller itself), and a pidfile for
+nohup'd Node servers.
+
 **Reality check:** our first two autostart "failures" were actually this
 wrong path (`~/boot/` instead of `~/.termux/boot/`). With the correct
 path, if MIUI still blocks autostart, the fallback that always works:

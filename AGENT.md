@@ -46,7 +46,14 @@ the pitfalls that cost us hours. The human-facing guide is `SETUP.md`.
 7. **Verify, don't assume.** After each install: run the binary, hit the
    endpoint (`curl http://<ip>:3000/signalk/`), pub/sub a test MQTT
    message. A successful `npm install` is not a working service.
-8. zigbee2mqtt without a coordinator logs `EHOSTUNREACH <ip>:6638` and
+   `pgrep -x name` is unreliable on Android (full-path process names) —
+   use `pgrep -f "/usr/bin/nam[e]"` bracket patterns; use a pidfile for
+   nohup'd Node servers (their cmdline is `node /path/...`).
+8. **Termux:Boot only fires after first screen unlock post-reboot.** For
+   unattended recovery use `termux-job-scheduler -s <script> --job-id 1
+   --period-ms 900000 --persisted true` (15 min = Android minimum) with
+   an idempotent script; verify with `termux-job-scheduler -p`.
+9. zigbee2mqtt without a coordinator logs `EHOSTUNREACH <ip>:6638` and
    exits — that is the SUCCESS signal for the software part. Don't chase it.
 
 ## Delegation checklist (human, in order)
