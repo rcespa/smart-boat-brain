@@ -29,10 +29,10 @@ the boat's server brain, plus an **ESP32** board as the sensor gateway.
 
 | Device | Interface | Notes |
 |---|---|---|
-| VHF radio with DSC | NMEA 0183 | position / DSC calls over the bus |
-| AIS transponder (active) | NMEA 0183 | vessel traffic |
+| Fixed VHF **ICOM M330GE** | — | not connected to NMEA of any generation; standalone |
+| AIS transponder **Raymarine AIS650** (active) | NMEA 0183 | vessel traffic; on the 0183 bus |
 | **NMEA4WIFI** multiplexer ([vela-navega.com](https://www.vela-navega.com/index.php/nmea4wifi)) | NMEA 0183 ⇄ WiFi (TCP/UDP) | ESP32-based: 4 opto-isolated 0183 inputs (+SeaTalk1), 1 output; this is how the legacy 0183 bus reaches the network |
-| Depth sounder | NASA Marine | NMEA 0183 |
+| Depth sounder **NASA Marine** | — | no NMEA output on this model: depth is not on the bus (yet) |
 | Service battery | 330 Ah **LiFePO4** | the energy store being monitored |
 | Battery management system | **Bluetooth** | BMS of the LiFePO4 pack |
 | Solar charge controller | **SmartSolar MPPT 100/30** (Victron Energy) | **Bluetooth** (Victron Smart protocol) |
@@ -53,10 +53,12 @@ software stack:
 - **[AvNav](https://www.wellenvogel.net/software/avnav/)** (native Android
   app) — chartplotter and instrument display, receiving Signal K alarms
 
-The NMEA 0183 world (VHF, AIS, depth sounder) enters Signal K through the
+The NMEA 0183 world (Raymarine AIS650) enters Signal K through the
 existing **NMEA4WIFI** multiplexer: it already streams the bus over
 TCP/UDP, and Signal K has a native NMEA 0183-over-TCP/UDP input — no new
-hardware needed for that part.
+hardware needed for that part. The NASA depth sounder has no NMEA output
+and the ICOM VHF is not wired to NMEA: both are outside the data bus for
+now.
 
 The phone gives things a Raspberry Pi cannot:
 
@@ -78,8 +80,8 @@ independently of the phone.
 | Subsystem | Sensor | Path |
 |---|---|---|
 | Wind (speed, angle, heading, roll/pitch) | Calypso Ultrasonic (BLE, masthead) | ESP32 gateway → Signal K TCP |
-| Depth | NASA Marine sounder | NMEA 0183 → NMEA4WIFI → Signal K |
-| AIS / DSC / VHF | existing instruments | NMEA 0183 → NMEA4WIFI → Signal K |
+| Depth | NASA Marine sounder | not on the bus (no NMEA output) — future candidate |
+| AIS | Raymarine AIS650 | NMEA 0183 → NMEA4WIFI → Signal K |
 | Energy: solar, charging, battery state | SmartSolar MPPT 100/30, Orion XS 12/12-50, LiFePO4 BMS | Bluetooth → Signal K (dedicated dashboards) |
 | Fridges x3 + engine room temperature | ZigBee temperature sensors | coordinator → zigbee2mqtt → MQTT → Signal K |
 | Bilges / watertight compartments x4 | ThirdReality ZigBee water leak sensors (with local 120 dB buzzer) | same path |

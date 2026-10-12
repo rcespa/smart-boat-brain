@@ -31,10 +31,10 @@ integrata, GPS, sensori, fotocamere, modem cellulare 4G LTE) come
 
 | Dispositivo | Interfaccia | Note |
 |---|---|---|
-| VHF con DSC | NMEA 0183 | posizione / chiamate DSC sul bus |
-| Trasponditore AIS (attivo) | NMEA 0183 | traffico navale |
+| VHF fisso **ICOM M330GE** | — | non collegato a NMEA di alcuna generazione; standalone |
+| Trasponditore AIS **Raymarine AIS650** (attivo) | NMEA 0183 | traffico navale; sul bus 0183 |
 | Multiplexer **NMEA4WIFI** ([vela-navega.com](https://www.vela-navega.com/index.php/nmea4wifi)) | NMEA 0183 ⇄ WiFi (TCP/UDP) | basato su ESP32: 4 ingressi 0183 optoisolati (+SeaTalk1), 1 uscita; è così che il bus 0183 legacy arriva in rete |
-| Eco | NASA Marine | NMEA 0183 |
+| Eco **NASA Marine** | — | questo modello non ha uscita NMEA: la profondità non è sul bus (per ora) |
 | Batteria servizi | **LiFePO4** 330 Ah | il pacco energetico da monitorare |
 | BMS | **Bluetooth** | BMS del pacco LiFePO4 |
 | Regolatore solare | **SmartSolar MPPT 100/30** (Victron Energy) | **Bluetooth** (protocollo Victron Smart) |
@@ -55,10 +55,11 @@ parte software:
 - **[AvNav](https://www.wellenvogel.net/software/avnav/)** (app Android
   nativa) — plotter e display strumenti, riceve le notifiche Signal K come allarmi
 
-Il mondo NMEA 0183 (VHF, AIS, eco) entra in Signal K attraverso il
+Il mondo NMEA 0183 (AIS Raymarine AIS650) entra in Signal K attraverso il
 multiplexer **NMEA4WIFI** già presente: trasmette già il bus su TCP/UDP, e
 Signal K ha un input nativo NMEA 0183 su TCP/UDP — per quella parte non
-serve nuovo hardware.
+serve nuovo hardware. L'eco NASA Marine non ha uscita NMEA e l'ICOM VHF
+non è cablato su NMEA: entrambi restano fuori dal bus dati, per ora.
 
 Il telefono offre cose che un Raspberry Pi non ha:
 
@@ -80,8 +81,8 @@ telefono.
 | Sottosistema | Sensore | Percorso |
 |---|---|---|
 | Vento (velocità, angolo, rotta, rollio/beccuccio) | Calypso Ultrasonic (BLE, in testa d'albero) | gateway ESP32 → Signal K TCP |
-| Profondità | eco NASA Marine | NMEA 0183 → NMEA4WIFI → Signal K |
-| AIS / DSC / VHF | strumenti esistenti | NMEA 0183 → NMEA4WIFI → Signal K |
+| Profondità | eco NASA Marine | non sul bus (nessuna uscita NMEA) — candidato futuro |
+| AIS | Raymarine AIS650 | NMEA 0183 → NMEA4WIFI → Signal K |
 | Energia: solare, carica, stato batterie | SmartSolar MPPT 100/30, Orion XS 12/12-50, BMS LiFePO4 | Bluetooth → Signal K (dashboard dedicate) |
 | Frigoriferi x3 + temperatura locale motore | sensori di temperatura ZigBee | coordinatore → zigbee2mqtt → MQTT → Signal K |
 | Sentine / locali stagni x4 | sensori di allagamento ZigBee ThirdReality (con buzzer locale da 120 dB) | stesso percorso |
